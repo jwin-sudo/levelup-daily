@@ -5,9 +5,10 @@ import type { Message } from '../types'
 interface ChatWindowProps {
   messages: Message[]
   readOnly?: boolean
+  compact?: boolean
 }
 
-export function ChatWindow({ messages, readOnly = false }: ChatWindowProps) {
+export function ChatWindow({ messages, readOnly = false, compact = false }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -15,7 +16,7 @@ export function ChatWindow({ messages, readOnly = false }: ChatWindowProps) {
   }, [messages])
 
   return (
-    <div className={`flex-1 overflow-y-auto px-4 py-4 ${readOnly ? 'opacity-80' : ''}`}>
+    <div className={`${compact ? 'max-h-48 overflow-y-auto' : 'flex-1 overflow-y-auto'} px-4 py-4 ${readOnly ? 'opacity-75' : ''}`}>
       {messages.map((msg, i) => (
         <MessageBubble key={i} role={msg.role} content={msg.content} />
       ))}

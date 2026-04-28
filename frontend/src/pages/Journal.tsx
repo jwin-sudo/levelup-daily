@@ -1,15 +1,22 @@
 import { useEffect } from 'react'
 import { useJournalStore } from '../stores/journalStore'
+import { useStatsStore } from '../stores/statsStore'
 import { ChatWindow } from '../components/ChatWindow'
 import { MessageInput } from '../components/MessageInput'
 import { ErrorBanner } from '../components/ErrorBanner'
+import { DebriefScreen } from '../components/DebriefScreen'
 
 export function Journal() {
-  const { status, messages, isLoading, error, loadToday, completeSession, clearError } = useJournalStore()
+  const { status, messages, debrief, isLoading, error, loadToday, completeSession, clearError } = useJournalStore()
+  const applyDebrief = useStatsStore(s => s.applyDebrief)
 
   useEffect(() => {
     loadToday()
   }, [loadToday])
+
+  useEffect(() => {
+    if (debrief) applyDebrief(debrief)
+  }, [debrief, applyDebrief])
 
   if (status === 'idle') {
     return (
@@ -24,7 +31,7 @@ export function Journal() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)]">
+    <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-100 bg-white">
         <h1 className="text-lg font-bold text-gray-800">Journal</h1>
         {status === 'completed' && (
@@ -36,10 +43,9 @@ export function Journal() {
 
       <ErrorBanner error={error} onDismiss={clearError} />
 
-      <ChatWindow messages={messages} readOnly={status === 'completed'} />
-
       {status === 'active' && (
         <>
+          <ChatWindow messages={messages} />
           <MessageInput />
           <div className="px-4 pb-4 bg-white">
             <button
@@ -51,6 +57,22 @@ export function Journal() {
             </button>
           </div>
         </>
+      )}
+
+      {status === 'completed' && (
+        <div className="flex-1 overflow-y-auto flex flex-col">
+          <ChatWindow messages={messages} readOnly compact />
+          <div className="border-t border-gray-100">
+            {debrief
+              ? <DebriefScreen debrief={debrief} />
+              : (
+                <div className="px-4 py-6 text-center text-sm text-gray-400">
+                  Loading debrief…
+                </div>
+              )
+            }
+          </div>
+        </div>
       )}
     </div>
   )
