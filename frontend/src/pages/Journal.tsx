@@ -66,8 +66,10 @@ export function Journal() {
             {debrief
               ? <DebriefScreen debrief={debrief} />
               : (
-                <div className="px-4 py-6 text-center text-sm text-gray-400">
-                  Loading debrief…
+                <div className="px-6 py-10 flex flex-col items-center gap-2 text-center">
+                  <span className="text-3xl">✅</span>
+                  <p className="font-semibold text-gray-700">You've journaled today!</p>
+                  <p className="text-sm text-gray-400">Come back tomorrow for your next session.</p>
                 </div>
               )
             }
