@@ -3,3 +3,4 @@ uvicorn
 sqlmodel
 anthropic
 python-dotenv
+psycopg2-binary
