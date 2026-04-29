@@ -78,7 +78,7 @@
   Acceptance: Home tab shows the two-column path visualization on first open (empty state — path lines visible, warm message shown, not a blank screen). After completing a journal session with goals set, milestone cards appear on the path. Visual style is bright, optimistic, and matches the Duolingo-adjacent design direction.
   Verify: Open the Home tab on a fresh session — confirm the empty state renders with both path lines and the warm message (not a blank white screen). Then: add at least one goal in the Goals tab, complete a full journal session (send messages, click "End Session"), then return to the Home tab — confirm milestone cards appear on the appropriate column (short-term or long-term based on which goal type you set).
 
-- [ ] **12. Deployment — Railway (backend) + Vercel (frontend)**
+- [x] **12. Deployment — Railway (backend) + Vercel (frontend)**
   Spec ref: `spec.md > Runtime & Deployment`
   What to build: Deploy the backend to Railway: create a new Railway project, connect the GitHub repo (`jwin-sudo/levelup-daily`), add the PostgreSQL plugin, set environment variables (`ANTHROPIC_API_KEY`, `DATABASE_URL` auto-provided by Railway, `FRONTEND_URL` set to the Vercel URL after frontend deploys). Deploy the frontend to Vercel: connect the same GitHub repo, set root directory to `frontend/`, set environment variable `VITE_API_URL` to the Railway backend URL. Update the backend CORS config to whitelist the Vercel domain. Push final code to GitHub.
   Acceptance: The Railway URL returns a valid response from `/docs`. The Vercel URL loads the app. Opening the Journal tab on the live Vercel URL successfully fetches from Railway and the AI's opening message appears. No CORS errors in the browser console.
