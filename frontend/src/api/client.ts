@@ -1,8 +1,9 @@
 import type { DebriefResponse, Goal, HomeResponse, StatsResponse } from '../types'
+import { getApiBaseUrl } from './base'
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const BASE = () => getApiBaseUrl()
 
-const json = (r: Response) => {
+const json = (r: Response): Promise<any> => {
   if (!r.ok) throw new Error(`HTTP ${r.status}`)
   return r.json()
 }
@@ -10,32 +11,32 @@ const json = (r: Response) => {
 export const api = {
   journal: {
     getToday: (): Promise<{ status: string; messages: { role: string; content: string }[] }> =>
-      fetch(`${BASE}/journal/today`).then(json),
+      fetch(`${BASE()}/journal/today`).then(json),
 
     sendMessage: (content: string): Promise<{ role: string; content: string }> =>
-      fetch(`${BASE}/journal/message`, {
+      fetch(`${BASE()}/journal/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
       }).then(json),
 
     complete: (): Promise<DebriefResponse> =>
-      fetch(`${BASE}/journal/complete`, { method: 'POST' }).then(json),
+      fetch(`${BASE()}/journal/complete`, { method: 'POST' }).then(json),
   },
 
   goals: {
     list: (): Promise<{ short_term: Goal[]; long_term: Goal[] }> =>
-      fetch(`${BASE}/goals`).then(json),
+      fetch(`${BASE()}/goals`).then(json),
 
     create: (title: string, type: 'short_term' | 'long_term'): Promise<Goal> =>
-      fetch(`${BASE}/goals`, {
+      fetch(`${BASE()}/goals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, type }),
       }).then(json),
 
     update: (id: number, title: string): Promise<Goal> =>
-      fetch(`${BASE}/goals/${id}`, {
+      fetch(`${BASE()}/goals/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title }),
@@ -48,10 +49,10 @@ export const api = {
   },
 
   stats: {
-    get: (): Promise<StatsResponse> => fetch(`${BASE}/stats`).then(json),
+    get: (): Promise<StatsResponse> => fetch(`${BASE()}/stats`).then(json),
   },
 
   home: {
-    get: (): Promise<HomeResponse> => fetch(`${BASE}/home`).then(json),
+    get: (): Promise<HomeResponse> => fetch(`${BASE()}/home`).then(json),
   },
 }
